@@ -53,6 +53,14 @@ resource "aws_security_group" "main" {
   description = "${var.component}-${var.env}"
   vpc_id      = var.vpc_id
 
+  ingress {
+    description = "APP"
+    from_port   = var.port
+    to_port     = var.port
+    protocol    = "tcp"
+    cidr_blocks = var.allow_app_to
+  }
+
   tags = merge(
     var.tags,
     { Name = "${var.component}-${var.env}" }
@@ -68,19 +76,17 @@ resource "aws_vpc_security_group_ingress_rule" "ingress" {
   description = "SSH"
 }
 
-resource "aws_vpc_security_group_ingress_rule" "ingress2" {
-  security_group_id = aws_security_group.main.id
-  cidr_ipv4         = var.allow_app_to
-  from_port         = var.port
-  ip_protocol       = "tcp"
-  to_port           = var.port
-  description = "APP"
-}
+#resource "aws_vpc_security_group_ingress_rule" "ingress2" {
+#  security_group_id = aws_security_group.main.id
+#  cidr_ipv4         = var.allow_app_to
+#  from_port         = var.port
+#  ip_protocol       = "tcp"
+#  to_port           = var.port
+#  description = "APP"
+#}
 
 resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv4" {
   security_group_id = aws_security_group.main.id
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1" # semantically equivalent to all ports
-  from_port = 0
-  to_port = 0
 }
