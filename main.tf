@@ -60,7 +60,7 @@ resource "aws_security_group" "main" {
   )
 }
 
-resource "aws_vpc_security_group_ingress_rule" "allow_tls_ipv4" {
+resource "aws_vpc_security_group_ingress_rule" "ingress" {
   security_group_id = aws_security_group.main.id
   cidr_ipv4         = var.bastion_cidr
   from_port         = 22
@@ -69,7 +69,7 @@ resource "aws_vpc_security_group_ingress_rule" "allow_tls_ipv4" {
   description = "SSH"
 }
 
-resource "aws_vpc_security_group_ingress_rule" "allow_tls_ipv4" {
+resource "aws_vpc_security_group_ingress_rule" "ingress2" {
   security_group_id = aws_security_group.main.id
   cidr_ipv4         = var.allow_app_to
   from_port         = var.port
