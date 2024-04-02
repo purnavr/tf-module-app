@@ -1,9 +1,9 @@
 resource "aws_launch_template" "main" {
   name = "${var.component}-${var.env}"
 
-    iam_instance_profile {
-      name = aws_iam_instance_profile.main.name
-    }
+  iam_instance_profile {
+    name = aws_iam_instance_profile.main.name
+  }
 
   image_id = data.aws_ami.ami.id
 
@@ -12,6 +12,7 @@ resource "aws_launch_template" "main" {
   }
 
   instance_type = var.instance_type
+
   vpc_security_group_ids = [aws_security_group.main.id]
 
   tag_specifications {
@@ -26,10 +27,8 @@ resource "aws_launch_template" "main" {
   user_data = base64encode(templatefile("${path.module}/userdata.sh", {
     component = var.component
     env = var.env
-
   } ))
 }
-
 
 resource "aws_autoscaling_group" "main" {
   name = "${var.component}-${var.env}"
