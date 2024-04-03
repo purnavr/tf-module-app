@@ -130,7 +130,7 @@ resource "aws_lb_listener_rule" "listener" {
 
   condition {
     host_header {
-      values = local.dns_name]
+      values = local.dns_name
     }
   }
 }
