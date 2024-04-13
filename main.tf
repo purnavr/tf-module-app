@@ -21,7 +21,7 @@ resource "aws_launch_template" "main" {
 
     tags = merge(
       var.tags,
-      { Name = "${var.component}-${var.env}" }
+      { Name = "${var.component}-${var.env}", monitor = "yes" }
     )
   }
 
@@ -63,6 +63,14 @@ resource "aws_security_group" "main" {
     cidr_blocks = var.allow_app_to
   }
 
+  ingress {
+    description = "PROMETHEUS"
+    from_port   = 9100
+    to_port     = 9100
+    protocol    = "tcp"
+    cidr_blocks = var.monitoring_nodes
+  }
+
   tags = merge(
     var.tags,
     { Name = "${var.component}-${var.env}" }
@@ -77,6 +85,7 @@ resource "aws_vpc_security_group_ingress_rule" "ingress" {
   to_port           = 22
   description = "SSH"
 }
+
 
 #resource "aws_vpc_security_group_ingress_rule" "ingress2" {
 #  security_group_id = aws_security_group.main.id
@@ -104,6 +113,7 @@ resource "aws_lb_target_group" "main" {
     unhealthy_threshold = 2
     interval = 5
     timeout = 4
+    path = "/health"
   }
   tags = merge(
     var.tags,
