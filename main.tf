@@ -63,13 +63,13 @@ resource "aws_security_group" "main" {
     cidr_blocks = var.allow_app_to
   }
 
-  ingress {
-    description = "PROMETHEUS"
-    from_port   = 9100
-    to_port     = 9100
-    protocol    = "tcp"
-    cidr_blocks = var.monitoring_nodes
-  }
+#  ingress {
+#    description = "PROMETHEUS"
+#    from_port   = 9100
+#    to_port     = 9100
+#    protocol    = "tcp"
+#    cidr_blocks = var.monitoring_nodes
+#  }
 
   tags = merge(
     var.tags,
@@ -84,6 +84,15 @@ resource "aws_vpc_security_group_ingress_rule" "ingress" {
   ip_protocol       = "tcp"
   to_port           = 22
   description = "SSH"
+}
+
+resource "aws_vpc_security_group_ingress_rule" "ingresss" {
+  security_group_id = aws_security_group.main.id
+  cidr_ipv4         = var.monitoring_nodes
+  from_port         = 9100
+  ip_protocol       = "tcp"
+  to_port           = 9100
+  description = "PROMETHEUS"
 }
 
 
